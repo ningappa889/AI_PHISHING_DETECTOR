@@ -1,27 +1,49 @@
 import joblib
+from scipy.sparse import hstack, csr_matrix
 
-# Load model and vectorizer
+from utils.feature_matrix import build_feature_dataframe
+
+# Load model, vectorizer, and scaler
 model = joblib.load("model/phishing_model.pkl")
 vectorizer = joblib.load("model/vectorizer.pkl")
+scaler = joblib.load("model/scaler.pkl")
 
 while True:
+
     url = input("\nEnter URL (or type 'exit' to quit): ")
 
     if url.lower() == "exit":
         break
 
-    # Convert URL into numerical features
-    url_vector = vectorizer.transform([url])
+    # TF-IDF Features
+    tfidf = vectorizer.transform([url])
 
-    # Predict
-    prediction = model.predict(url_vector)[0]
+    # Handcrafted URL Features
+    url_features = build_feature_dataframe([url])
 
-    # Confidence
-    confidence = model.predict_proba(url_vector)[0]
+    # Scale handcrafted features using the SAME scaler fit during training.
+    # This must match train_model.py exactly, or the feature magnitudes
+    # won't line up with what the model learned.
+    url_features_scaled = scaler.transform(url_features.values)
+
+    # Combine Features
+    X = hstack([tfidf, csr_matrix(url_features_scaled)])
+
+    # Prediction
+    prediction = model.predict(X)[0]
+
+    print("\n" + "=" * 40)
 
     if prediction == 0:
-        print(f"\n✅ Safe Website")
-        print(f"Confidence: {confidence[0]*100:.2f}%")
+        print("✅ SAFE WEBSITE")
     else:
-        print(f"\n⚠️ Phishing Website")
-        print(f"Confidence: {confidence[1]*100:.2f}%")
+        print("⚠️ PHISHING WEBSITE")
+
+    print("=" * 40)
+
+    print("\nExtracted Features (raw, before scaling)\n")
+
+    for feature, value in url_features.iloc[0].items():
+        print(f"{feature:25} : {value}")
+
+    print("\n")
