@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=3.0">
 </head>
 <body>
 
@@ -20,27 +20,29 @@
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
-    <!-- Fixed Navigation Bar -->
+    <!-- Fixed Top Navigation Bar -->
     <header class="top-nav sticky-nav">
-        <div class="nav-brand">
-            <span class="shield-icon">🛡️</span>
-            <span class="brand-text">PhishGuard <span class="badge-ai">AI 2.0</span></span>
-        </div>
+        <div class="nav-container">
+            <div class="nav-brand">
+                <span class="shield-icon">🛡️</span>
+                <span class="brand-text">PhishGuard <span class="badge-ai">AI 2.0</span></span>
+            </div>
 
-        <nav class="nav-links">
-            <a href="#hero" class="nav-link active">Home</a>
-            <a href="#features" class="nav-link">Features</a>
-            <a href="#how-it-works" class="nav-link">How It Works</a>
-            <a href="#technology" class="nav-link">Technology</a>
-            <a href="#about" class="nav-link">About Me</a>
-            <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="nav-link">GitHub</a>
-        </nav>
+            <nav class="nav-links">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#technology" class="nav-link">Technology</a>
+                <a href="#about" class="nav-link">About Me</a>
+                <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="nav-link">GitHub</a>
+            </nav>
 
-        <div class="nav-actions">
-            <button type="button" class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Mode">
-                <span class="theme-icon">🌙</span>
-            </button>
-            <a href="{{ url_for('scan') }}" class="nav-cta-btn">Scan URL →</a>
+            <div class="nav-actions">
+                <button type="button" class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <a href="{{ url_for('scan') }}" class="nav-cta-btn">Scan URL →</a>
+            </div>
         </div>
     </header>
 
