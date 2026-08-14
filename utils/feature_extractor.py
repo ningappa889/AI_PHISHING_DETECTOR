@@ -63,7 +63,7 @@ TRUSTED_DOMAINS = {
     "incometax.gov.in", "passportindia.gov.in", "parivahan.gov.in", "digilocker.gov.in",
     "airtel.in", "jio.com", "tataplay.com", "hotstar.com",
 
-    # Global Tech, Social, Search & AI Platforms
+    # Global Tech, News, Social, Search & AI Platforms
     "google.com", "google.co.in", "google.co.uk", "youtube.com", "gmail.com",
     "amazon.com", "amazon.in", "apple.com", "microsoft.com", "github.com", "gitlab.com",
     "openai.com", "chatgpt.com", "claude.ai", "anthropic.com", "perplexity.ai",
@@ -71,7 +71,9 @@ TRUSTED_DOMAINS = {
     "linkedin.com", "reddit.com", "netflix.com", "spotify.com", "wikipedia.org",
     "geeksforgeeks.org", "stackoverflow.com", "medium.com", "coursera.org",
     "udemy.com", "quora.com", "canva.com", "figma.com", "adobe.com", "zoom.us",
-    "notion.so", "paypal.com", "yahoo.com"
+    "notion.so", "paypal.com", "yahoo.com", "bbc.com", "cnn.com", "nytimes.com",
+    "theguardian.com", "reuters.com", "bloomberg.com", "forbes.com", "ndtv.com",
+    "indiatimes.com", "hindustantimes.com", "thehindu.com", "indianexpress.com"
 }
 
 
@@ -101,12 +103,48 @@ def is_trusted_domain(url):
     return reg_domain in TRUSTED_DOMAINS
 
 
+SUSPICIOUS_TLDS = {
+    ".top", ".online", ".cfd", ".xyz", ".site", ".icu", ".tk", ".ml", ".ga",
+    ".cf", ".gq", ".zip", ".mov", ".bid", ".click", ".monster", ".fit", ".buzz",
+    ".rest", ".work", ".beauty", ".hair", ".quest", ".live", ".shop", ".vip",
+    ".space", ".vu", ".cyou", ".casa", ".cam", ".best", ".cc", ".to"
+}
+
+
 def has_suspicious_domain_pattern(url):
     if is_trusted_domain(url):
         return False
+
+    cleaned = clean_url(url).lower()
+    netloc = cleaned.split("/")[0].split(":")[0]
+
+    # 1. Check for high-risk abused phishing TLDs
+    for tld in SUSPICIOUS_TLDS:
+        if netloc.endswith(tld):
+            return True
+
     feats = extract_features(url)
-    if feats["suspicious_keywords"] >= 2 or (feats["suspicious_keywords"] >= 1 and feats["hyphen_count"] >= 1):
+
+    # 2. Check for suspicious keywords & structural traits
+    if feats["suspicious_keywords"] >= 1:
+        if feats["hyphen_count"] >= 1 or feats["subdomain_count"] >= 1 or "/" in cleaned:
+            return True
+        if feats["suspicious_keywords"] >= 2:
+            return True
+
+    # 3. Check for hyphenated domain names on non-trusted TLDs
+    if feats["hyphen_count"] >= 1 and (feats["domain_length"] >= 12 or feats["suspicious_keywords"] >= 1):
         return True
+
+    # 4. Check for suspicious path patterns (/v/index.html, /goldclie/new, /gRB0qs)
+    parts = cleaned.split("/")
+    if len(parts) > 1:
+        path = "/".join(parts[1:])
+        if any(token in path for token in ["/v/", "index.html", "login", "secure", "verify", "new", "gold"]):
+            return True
+        if len(parts[1]) >= 5 and re.match(r"^[a-zA-Z0-9_-]+$", parts[1]) and not parts[1].endswith((".html", ".php", ".htm")):
+            return True
+
     return False
 
 
@@ -114,8 +152,6 @@ def extract_features(url):
 
     cleaned = clean_url(url)
 
-    # Prepend a dummy scheme so urlparse can correctly split netloc/path
-    # for ANY input. Handle malformed URLs gracefully if urlparse raises ValueError (e.g. invalid IPv6 brackets).
     try:
         parsed = urlparse("http://" + cleaned)
         netloc = parsed.netloc
@@ -123,53 +159,24 @@ def extract_features(url):
         netloc = cleaned.split("/")[0].split(":")[0]
 
     keywords = [
-        "login",
-        "secure",
-        "verify",
-        "update",
-        "account",
-        "signin",
-        "bank",
-        "paypal",
-        "free",
-        "bonus",
-        "benefits",
-        "access",
-        "claim",
-        "portal",
-        "support",
-        "service",
-        "billing",
-        "help",
-        "info",
-        "confirm",
-        "admin",
-        "security",
-        "wallet"
+        "login", "secure", "verify", "update", "account", "signin", "bank",
+        "paypal", "free", "bonus", "benefits", "access", "claim", "portal",
+        "support", "service", "billing", "help", "info", "confirm", "admin",
+        "security", "wallet", "remote", "domain", "sav", "save", "prune",
+        "client", "gold", "clie", "direct", "express", "token", "auth",
+        "connect", "mail", "banking", "office", "webmail", "genthis", "eplus"
     ]
 
     return {
-
         "url_length": len(cleaned),
-
         "domain_length": len(netloc),
-
         "dot_count": cleaned.count("."),
-
         "hyphen_count": cleaned.count("-"),
-
         "slash_count": cleaned.count("/"),
-
         "digit_count": sum(c.isdigit() for c in cleaned),
-
         "contains_at": 1 if "@" in cleaned else 0,
-
         "contains_ip": 1 if re.search(r"\d+\.\d+\.\d+\.\d+", netloc) else 0,
-
         "subdomain_count": max(len(netloc.split(".")) - 2, 0),
-
-        "suspicious_keywords":
-            sum(word in cleaned.lower() for word in keywords),
-
+        "suspicious_keywords": sum(word in cleaned.lower() for word in keywords),
         "entropy": entropy(cleaned)
     }
