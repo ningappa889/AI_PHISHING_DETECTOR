@@ -42,12 +42,21 @@ def home():
 
             if is_trusted_domain(url):
                 prediction = "SAFE"
-                risk_score = 5
                 is_trusted = True
+                # Dynamic minimal risk percentage between 3% and 12%
+                entropy_val = features.get("entropy", 2.0)
+                url_len = features.get("url_length", 10)
+                risk_score = min(12, max(3, int(3 + (entropy_val * 1.5) + (url_len % 4))))
             elif has_suspicious_domain_pattern(url):
                 prediction = "PHISHING"
-                risk_score = 92
                 is_trusted = False
+                # Dynamic threat density score for heuristic phishing
+                threat_boost = (features.get("suspicious_keywords", 0) * 8) + \
+                               (features.get("hyphen_count", 0) * 6) + \
+                               (features.get("subdomain_count", 0) * 7) + \
+                               (features.get("contains_ip", 0) * 20) + \
+                               (features.get("slash_count", 0) * 3)
+                risk_score = min(98, max(72, int(72 + threat_boost)))
             else:
                 cleaned_url = clean_url(url)
                 tfidf = vectorizer.transform([cleaned_url])
@@ -59,9 +68,9 @@ def home():
                 if hasattr(model, "decision_function"):
                     raw_score = model.decision_function(X)[0]
                     prob = 1 / (1 + math.exp(-raw_score))
-                    risk_score = int(round(prob * 100))
+                    base_prob = int(round(prob * 100))
                 else:
-                    risk_score = 85 if result == 1 else 15
+                    base_prob = 80 if result == 1 else 20
 
                 is_structurally_clean = (
                     features.get("suspicious_keywords", 0) == 0 and
@@ -74,13 +83,16 @@ def home():
 
                 if is_structurally_clean and not has_suspicious_domain_pattern(url):
                     prediction = "SAFE"
-                    risk_score = min(risk_score, 12)
+                    entropy_val = features.get("entropy", 2.5)
+                    risk_score = min(18, max(6, int(6 + (entropy_val * 2.5) + features.get("dot_count", 1))))
                 elif result == 1:
                     prediction = "PHISHING"
-                    risk_score = max(risk_score, 75)
+                    threat_boost = (features.get("suspicious_keywords", 0) * 6) + (features.get("hyphen_count", 0) * 5)
+                    risk_score = min(98, max(68, max(base_prob, 68) + threat_boost))
                 else:
                     prediction = "SAFE"
-                    risk_score = min(risk_score, 45)
+                    base = 16 + (features.get("dot_count", 1) * 4) + (features.get("slash_count", 0) * 5) + int(features.get("entropy", 3.0) * 3)
+                    risk_score = min(48, max(16, base))
 
             # Categorize into 5 explicit risk tiers with icons & colors
             if risk_score <= 15:
