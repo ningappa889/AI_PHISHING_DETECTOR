@@ -18,6 +18,10 @@ def entropy(text):
 
 def clean_url(url):
     u = url.strip()
+    # Strip trailing CSV dataset annotations like ,0 or ,1 or ,"0" or ,"1"
+    u = re.sub(r'[,"]+\s*[01]\s*$', '', u)
+    u = u.rstrip(',"\'')
+
     # Handle defanged URL notations like hxxps:// or [.]
     u = re.sub(r"\[\.\]|\(\.\)", ".", u)
     # Recursively strip schemes in case of double prefixes like https://hxxps://
