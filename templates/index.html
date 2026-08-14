@@ -122,6 +122,25 @@
                     <code class="url-text">{{ url }}</code>
                 </div>
 
+                <!-- AI Security Analysis & Decision Breakdown -->
+                {% if reasons %}
+                <div class="analysis-section">
+                    <h3>💡 AI Security Reasoning & Decision Breakdown</h3>
+                    <div class="reasons-grid">
+                        {% for item in reasons %}
+                        <div class="reason-card">
+                            <div class="reason-header">
+                                <span class="reason-icon">{{ item.icon }}</span>
+                                <span class="reason-title">{{ item.title }}</span>
+                                <span class="reason-badge">{{ item.badge }}</span>
+                            </div>
+                            <p class="reason-desc">{{ item.desc }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
                 <!-- Feature Matrix -->
                 <div class="features-section">
                     <h3>🔬 Extracted Structural Features</h3>

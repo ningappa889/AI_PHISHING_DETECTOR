@@ -3,7 +3,7 @@ import joblib
 import math
 from scipy.sparse import hstack, csr_matrix
 
-from utils.feature_extractor import clean_url, is_trusted_domain, has_suspicious_domain_pattern
+from utils.feature_extractor import clean_url, is_trusted_domain, has_suspicious_domain_pattern, generate_analysis_reasoning
 from utils.feature_matrix import build_feature_dataframe
 
 app = Flask(__name__)
@@ -25,6 +25,7 @@ def home():
     risk_class = ""
     risk_icon = ""
     is_trusted = False
+    reasons = []
 
     if request.method == "POST":
 
@@ -116,6 +117,9 @@ def home():
                 risk_class = "risk-critical"
                 risk_icon = "skull"
 
+            # Generate Explainable AI Reasoning Analysis Points
+            reasons = generate_analysis_reasoning(url, prediction, features, is_trusted)
+
     return render_template(
         "index.html",
         prediction=prediction,
@@ -125,7 +129,8 @@ def home():
         risk_level=risk_level,
         risk_class=risk_class,
         risk_icon=risk_icon,
-        is_trusted=is_trusted
+        is_trusted=is_trusted,
+        reasons=reasons
     )
 
 

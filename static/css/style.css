@@ -415,6 +415,74 @@ body {
     margin-bottom: 25px;
 }
 
+/* AI Analysis Reasoning Section */
+.analysis-section {
+    margin-bottom: 25px;
+}
+
+.analysis-section h3 {
+    font-size: 1.1rem;
+    font-family: var(--font-heading);
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.reasons-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.reason-card {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 14px 16px;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.reason-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.reason-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+}
+
+.reason-icon {
+    font-size: 1.2rem;
+}
+
+.reason-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    flex-grow: 1;
+}
+
+.reason-badge {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-secondary);
+}
+
+.reason-desc {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.45;
+    margin: 0;
+    padding-left: 28px;
+}
+
 .url-label {
     color: var(--text-muted);
     font-weight: 600;
