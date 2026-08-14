@@ -984,7 +984,11 @@ body {
     color: var(--text-muted);
 }
 
-/* General Section Styling */
+/* General Section Styling & Scroll Offset for Fixed Navbar */
+section[id], .section-container {
+    scroll-margin-top: 100px;
+}
+
 .section-container {
     display: flex;
     flex-direction: column;

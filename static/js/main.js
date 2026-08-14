@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Smooth Scroll for Navigation Anchor Links
+    // Smooth Scroll for Navigation Anchor Links with Fixed Navbar Offset
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
@@ -103,9 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 const targetElem = document.querySelector(targetId);
                 if (targetElem) {
                     e.preventDefault();
-                    targetElem.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
+                    const navHeight = 90;
+                    const elementPosition = targetElem.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
                     });
                 }
             }
