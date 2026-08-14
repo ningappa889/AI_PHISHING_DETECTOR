@@ -1,50 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Phishing URL Detector - Instant Machine Learning Security Analysis for Web Links">
+    <title>AI Phishing URL Detector | Real-Time Machine Learning Security</title>
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
 
-    <title>AI Phishing URL Detector</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
-<div class="container">
+    <!-- Background Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
 
-    <h1>🛡️ AI Phishing URL Detector</h1>
+    <div class="app-layout">
 
-    <p>
-        Detect malicious and phishing websites using Machine Learning.
-    </p>
+        <!-- Top Navigation -->
+        <header class="top-nav">
+            <div class="nav-brand">
+                <span class="shield-icon">🛡️</span>
+                <span class="brand-text">PhishGuard <span class="badge-ai">AI 2.0</span></span>
+            </div>
+            <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </header>
 
-    <form method="POST">
+        <!-- Main Card Container -->
+        <main class="main-card">
 
-        <input
-            type="text"
-            name="url"
-            placeholder="Enter Website URL"
-            required>
+            <div class="hero-section">
+                <h1 class="hero-title">AI Phishing URL Detector</h1>
+                <p class="hero-subtitle">Instantly analyze web links with trained Machine Learning, TF-IDF NLP, and domain hierarchy verification.</p>
+            </div>
 
-        <br>
+            <!-- Quick Try Samples -->
+            <div class="sample-pills-container">
+                <span class="sample-label">Quick Test:</span>
+                <button type="button" class="sample-pill safe" onclick="setSample('https://www.google.com')">google.com</button>
+                <button type="button" class="sample-pill safe" onclick="setSample('https://www.amazon.com')">amazon.com</button>
+                <button type="button" class="sample-pill danger" onclick="setSample('http://paypal-login-security.xyz')">paypal-phish.xyz</button>
+                <button type="button" class="sample-pill warning" onclick="setSample('https://24.benefits-access.com')">24.benefits-access.com</button>
+            </div>
 
-        <button type="submit">
+            <!-- URL Scan Form -->
+            <form method="POST" id="scanForm" class="scan-form">
+                <div class="input-wrapper">
+                    <span class="input-prefix-icon">🔗</span>
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        name="url" 
+                        placeholder="https://example.com/login..." 
+                        value="{{ url }}" 
+                        required 
+                        autocomplete="off">
+                    <button type="button" class="clear-btn" id="clearBtn" onclick="clearInput()" title="Clear text">✕</button>
+                </div>
+                <button type="submit" id="submitBtn" class="scan-btn">
+                    <span class="btn-text">Scan URL</span>
+                    <span class="btn-spinner hidden"></span>
+                </button>
+            </form>
 
-            Scan URL
+            <!-- Results Section -->
+            {% if prediction %}
+            <div class="results-card {% if prediction == 'SAFE' %}card-safe{% else %}card-phishing{% endif %}" id="resultsCard">
+                
+                <div class="status-header">
+                    {% if prediction == "SAFE" %}
+                        <div class="status-badge badge-safe">
+                            <span class="status-icon">✅</span>
+                            <div>
+                                <h2>SAFE WEBSITE</h2>
+                                {% if is_trusted %}
+                                    <span class="trusted-tag">🔒 Verified Trusted Domain</span>
+                                {% else %}
+                                    <span class="trusted-tag">Machine Learning Verified</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="status-badge badge-phishing">
+                            <span class="status-icon">⚠️</span>
+                            <div>
+                                <h2>PHISHING / SUSPICIOUS</h2>
+                                <span class="trusted-tag">High Risk Link Detected</span>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
 
-        </button>
+                <!-- Risk Score Bar -->
+                <div class="risk-meter-wrapper">
+                    <div class="risk-label-row">
+                        <span class="risk-title">Threat Risk Index</span>
+                        <span class="risk-value {% if risk_score > 50 %}text-danger{% else %}text-safe{% endif %}">{{ risk_score }}% ({{ risk_level }})</span>
+                    </div>
+                    <div class="meter-bar-bg">
+                        <div class="meter-bar-fill {% if risk_score > 50 %}fill-danger{% else %}fill-safe{% endif %}" style="width: {{ risk_score }}%;"></div>
+                    </div>
+                </div>
 
-    </form>
+                <div class="scanned-url-box">
+                    <span class="url-label">Scanned Target:</span>
+                    <code class="url-text">{{ url }}</code>
+                </div>
 
-</div>
+                <!-- Feature Matrix -->
+                <div class="features-section">
+                    <h3>🔬 Extracted Structural Features</h3>
+                    <div class="features-grid">
 
+                        <div class="feature-card">
+                            <span class="feat-name">URL Length</span>
+                            <span class="feat-val">{{ features.url_length | int }} chars</span>
+                            <span class="feat-desc">Total canonical string length</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">Domain Length</span>
+                            <span class="feat-val">{{ features.domain_length | int }} chars</span>
+                            <span class="feat-desc">Hostname character count</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">Dot Count</span>
+                            <span class="feat-val">{{ features.dot_count | int }}</span>
+                            <span class="feat-desc">Period delimiters in URL</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">Subdomains</span>
+                            <span class="feat-val">{{ features.subdomain_count | int }}</span>
+                            <span class="feat-desc">Subdomain depth level</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">Suspicious Keywords</span>
+                            <span class="feat-val">{{ features.suspicious_keywords | int }}</span>
+                            <span class="feat-desc">Phishing bait words matched</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">Shannon Entropy</span>
+                            <span class="feat-val">{{ "%.3f"|format(features.entropy) }}</span>
+                            <span class="feat-desc">Randomness/character density</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">IP Address in Host</span>
+                            <span class="feat-val">{% if features.contains_ip %}Yes ⚠️{% else %}No ✅{% endif %}</span>
+                            <span class="feat-desc">Numerical IPv4 host usage</span>
+                        </div>
+
+                        <div class="feature-card">
+                            <span class="feat-name">Hyphen Count</span>
+                            <span class="feat-val">{{ features.hyphen_count | int }}</span>
+                            <span class="feat-desc">Hyphens in canonical URL</span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            {% endif %}
+
+        </main>
+
+        <footer class="footer">
+            <p>Powered by Python 3.13, Scikit-Learn Linear SVM, TF-IDF Vectorization & Flask</p>
+        </footer>
+
+    </div>
+
+    <!-- JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
-
 </html>

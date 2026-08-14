@@ -1,6 +1,7 @@
 import joblib
 from scipy.sparse import hstack, csr_matrix
 
+from utils.feature_extractor import clean_url
 from utils.feature_matrix import build_feature_dataframe
 
 # Load model, vectorizer, and scaler
@@ -16,7 +17,8 @@ while True:
         break
 
     # TF-IDF Features
-    tfidf = vectorizer.transform([url])
+    cleaned_url = clean_url(url)
+    tfidf = vectorizer.transform([cleaned_url])
 
     # Handcrafted URL Features
     url_features = build_feature_dataframe([url])
@@ -35,9 +37,9 @@ while True:
     print("\n" + "=" * 40)
 
     if prediction == 0:
-        print("✅ SAFE WEBSITE")
+        print("[SAFE] SAFE WEBSITE")
     else:
-        print("⚠️ PHISHING WEBSITE")
+        print("[WARNING] PHISHING WEBSITE")
 
     print("=" * 40)
 

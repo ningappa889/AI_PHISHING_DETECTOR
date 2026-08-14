@@ -5,6 +5,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import StandardScaler
 from scipy.sparse import hstack, csr_matrix
+from utils.feature_extractor import clean_url
 from utils.feature_matrix import build_feature_dataframe
 
 from sklearn.linear_model import LogisticRegression
@@ -23,7 +24,8 @@ print("\nLoading dataset...")
 
 df = pd.read_csv("dataset/cleaned_dataset.csv")
 
-urls = df["url"]
+raw_urls = df["url"]
+cleaned_urls = raw_urls.apply(clean_url)
 
 y = df["label"]
 
@@ -35,11 +37,11 @@ vectorizer = TfidfVectorizer(
     min_df=2
 )
 
-tfidf_features = vectorizer.fit_transform(urls)
+tfidf_features = vectorizer.fit_transform(cleaned_urls)
 
 print("Building URL Feature Matrix...")
 
-url_features = build_feature_dataframe(urls)
+url_features = build_feature_dataframe(raw_urls)
 
 # ================================
 # Scale handcrafted features
