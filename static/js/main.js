@@ -1,24 +1,36 @@
 // Theme Toggle Logic
-const themeToggleBtn = document.getElementById('themeToggle');
-const themeIcon = themeToggleBtn ? themeToggleBtn.querySelector('.theme-icon') : null;
-
-const savedTheme = localStorage.getItem('phishguard_theme') || 'dark';
-document.documentElement.setAttribute('data-theme', savedTheme);
-if (themeIcon) {
-    themeIcon.textContent = savedTheme === 'light' ? '☀️' : '🌙';
+function initTheme() {
+    const savedTheme = localStorage.getItem('phishguard_theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcons(savedTheme);
 }
 
-if (themeToggleBtn) {
-    themeToggleBtn.addEventListener('click', () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', newTheme);
-        localStorage.setItem('phishguard_theme', newTheme);
-        if (themeIcon) {
-            themeIcon.textContent = newTheme === 'light' ? '☀️' : '🌙';
-        }
+function updateThemeIcons(theme) {
+    const themeIcons = document.querySelectorAll('.theme-icon');
+    themeIcons.forEach(icon => {
+        icon.textContent = theme === 'light' ? '☀️' : '🌙';
     });
 }
+
+function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('phishguard_theme', newTheme);
+    updateThemeIcons(newTheme);
+}
+
+// Immediate execution to prevent flash
+initTheme();
+
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+
+    const themeBtn = document.getElementById('themeToggle');
+    if (themeBtn) {
+        themeBtn.onclick = toggleTheme;
+    }
+});
 
 // Sample Pill Selector
 function setSample(url) {
