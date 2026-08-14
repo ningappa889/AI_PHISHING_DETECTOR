@@ -20,8 +20,9 @@ def clean_url(url):
     u = url.strip()
     # Handle defanged URL notations like hxxps:// or [.]
     u = re.sub(r"\[\.\]|\(\.\)", ".", u)
-    u = re.sub(r"^h[xt]{2}ps?://", "", u, flags=re.IGNORECASE)
-    u = re.sub(r"^https?://", "", u, flags=re.IGNORECASE)
+    # Recursively strip schemes in case of double prefixes like https://hxxps://
+    while re.match(r"^(https?://|h[xt]{2}ps?://)", u, flags=re.IGNORECASE):
+        u = re.sub(r"^(https?://|h[xt]{2}ps?://)", "", u, flags=re.IGNORECASE)
     u = re.sub(r"^www\.", "", u, flags=re.IGNORECASE)
     return u
 
@@ -102,6 +103,12 @@ SUSPICIOUS_TLDS = {
 }
 
 
+FREE_HOSTING_DOMAINS = (
+    "workers.dev", "pages.dev", "herokuapp.com", "firebaseapp.com",
+    "web.app", "glitch.me", "onrender.com", "surge.sh"
+)
+
+
 def has_suspicious_domain_pattern(url):
     if is_trusted_domain(url):
         return False
@@ -109,10 +116,13 @@ def has_suspicious_domain_pattern(url):
     cleaned = clean_url(url).lower()
     netloc = cleaned.split("/")[0].split(":")[0]
 
-    # 1. Check for high-risk abused phishing TLDs
+    # 1. Check for high-risk abused phishing TLDs or free hosting subdomains
     for tld in SUSPICIOUS_TLDS:
         if netloc.endswith(tld):
             return True
+
+    if netloc.endswith(FREE_HOSTING_DOMAINS) and len(netloc.split(".")) >= 3:
+        return True
 
     feats = extract_features(url)
 

@@ -22,6 +22,8 @@ def home():
     features = None
     risk_score = 0
     risk_level = ""
+    risk_class = ""
+    risk_icon = ""
     is_trusted = False
 
     if request.method == "POST":
@@ -41,26 +43,21 @@ def home():
             if is_trusted_domain(url):
                 prediction = "SAFE"
                 risk_score = 5
-                risk_level = "Low Risk"
                 is_trusted = True
             elif has_suspicious_domain_pattern(url):
                 prediction = "PHISHING"
-                risk_score = 88
-                risk_level = "High Risk"
+                risk_score = 92
                 is_trusted = False
             else:
                 cleaned_url = clean_url(url)
                 tfidf = vectorizer.transform([cleaned_url])
-
                 url_features_scaled = scaler.transform(feature_df.values)
-
                 X = hstack([tfidf, csr_matrix(url_features_scaled)])
 
                 result = model.predict(X)[0]
 
                 if hasattr(model, "decision_function"):
                     raw_score = model.decision_function(X)[0]
-                    # Sigmoid transform to 0-100 percentage
                     prob = 1 / (1 + math.exp(-raw_score))
                     risk_score = int(round(prob * 100))
                 else:
@@ -77,16 +74,35 @@ def home():
 
                 if is_structurally_clean and not has_suspicious_domain_pattern(url):
                     prediction = "SAFE"
-                    risk_level = "Low Risk"
-                    risk_score = min(risk_score, 20)
+                    risk_score = min(risk_score, 12)
                 elif result == 1:
                     prediction = "PHISHING"
-                    risk_level = "High Risk"
-                    risk_score = max(risk_score, 65)
+                    risk_score = max(risk_score, 75)
                 else:
                     prediction = "SAFE"
-                    risk_level = "Low Risk"
                     risk_score = min(risk_score, 45)
+
+            # Categorize into 5 explicit risk tiers with icons & colors
+            if risk_score <= 15:
+                risk_level = "Minimal Risk"
+                risk_class = "risk-minimal"
+                risk_icon = "shield-check"
+            elif risk_score <= 35:
+                risk_level = "Low Risk"
+                risk_class = "risk-low"
+                risk_icon = "info"
+            elif risk_score <= 60:
+                risk_level = "Moderate Risk"
+                risk_class = "risk-moderate"
+                risk_icon = "alert-triangle"
+            elif risk_score <= 84:
+                risk_level = "High Risk"
+                risk_class = "risk-high"
+                risk_icon = "alert-octagon"
+            else:
+                risk_level = "Critical Risk"
+                risk_class = "risk-critical"
+                risk_icon = "skull"
 
     return render_template(
         "index.html",
@@ -95,6 +111,8 @@ def home():
         features=features,
         risk_score=risk_score,
         risk_level=risk_level,
+        risk_class=risk_class,
+        risk_icon=risk_icon,
         is_trusted=is_trusted
     )
 
