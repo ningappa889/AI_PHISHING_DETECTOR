@@ -17,19 +17,10 @@ def entropy(text):
 
 
 def clean_url(url):
-    """
-    Canonicalize a URL by stripping the scheme (http/https) and a leading
-    'www.' so that URLs are represented consistently regardless of how the
-    original data source formatted them.
-
-    This matters because the training dataset mixes sources that format
-    URLs differently (some with scheme+www, some bare domain-only), and
-    that formatting difference - not actual maliciousness - was leaking
-    into both the TF-IDF text and the handcrafted features. Normalizing
-    here removes that shortcut so the model has to learn from real
-    content instead.
-    """
     u = url.strip()
+    # Handle defanged URL notations like hxxps:// or [.]
+    u = re.sub(r"\[\.\]|\(\.\)", ".", u)
+    u = re.sub(r"^h[xt]{2}ps?://", "", u, flags=re.IGNORECASE)
     u = re.sub(r"^https?://", "", u, flags=re.IGNORECASE)
     u = re.sub(r"^www\.", "", u, flags=re.IGNORECASE)
     return u
@@ -125,18 +116,23 @@ def has_suspicious_domain_pattern(url):
 
     feats = extract_features(url)
 
-    # 2. Check for suspicious keywords & structural traits
+    # 2. Check for DGA / alphanumeric scam domain pattern (e.g. flfwc26.com, 24benefits, win99)
+    domain_name = netloc.split(".")[0]
+    if re.search(r"[a-zA-Z]{3,}\d+", domain_name) or re.search(r"\d+[a-zA-Z]{3,}", domain_name):
+        return True
+
+    # 3. Check for suspicious keywords & structural traits
     if feats["suspicious_keywords"] >= 1:
         if feats["hyphen_count"] >= 1 or feats["subdomain_count"] >= 1 or "/" in cleaned:
             return True
         if feats["suspicious_keywords"] >= 2:
             return True
 
-    # 3. Check for hyphenated domain names on non-trusted TLDs
+    # 4. Check for hyphenated domain names on non-trusted TLDs
     if feats["hyphen_count"] >= 1 and (feats["domain_length"] >= 12 or feats["suspicious_keywords"] >= 1):
         return True
 
-    # 4. Check for suspicious path patterns (/v/index.html, /goldclie/new, /gRB0qs)
+    # 5. Check for suspicious path patterns (/v/index.html, /goldclie/new, /gRB0qs)
     parts = cleaned.split("/")
     if len(parts) > 1:
         path = "/".join(parts[1:])
@@ -164,7 +160,8 @@ def extract_features(url):
         "support", "service", "billing", "help", "info", "confirm", "admin",
         "security", "wallet", "remote", "domain", "sav", "save", "prune",
         "client", "gold", "clie", "direct", "express", "token", "auth",
-        "connect", "mail", "banking", "office", "webmail", "genthis", "eplus"
+        "connect", "mail", "banking", "office", "webmail", "genthis", "eplus",
+        "fwc", "fifa", "ticket", "cup", "lottery", "promo", "event", "deal"
     ]
 
     return {
