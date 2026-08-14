@@ -38,7 +38,7 @@
             </nav>
 
             <div class="nav-actions">
-                <button type="button" class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Mode">
+                <button type="button" class="theme-toggle-btn" id="themeToggle" onclick="toggleTheme()" title="Toggle Light/Dark Mode">
                     <span class="theme-icon">🌙</span>
                 </button>
                 <a href="{{ url_for('scan') }}" class="nav-cta-btn">Scan URL →</a>
@@ -427,6 +427,6 @@
     </div>
 
     <!-- JavaScript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}?v=3.0"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}?v=4.0"></script>
 </body>
 </html>

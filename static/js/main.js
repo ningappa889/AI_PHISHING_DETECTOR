@@ -20,44 +20,42 @@ function toggleTheme() {
     updateThemeIcons(newTheme);
 }
 
-// Immediate execution to prevent flash
-initTheme();
+// Make functions globally accessible for inline HTML onclick attributes
+window.toggleTheme = toggleTheme;
+window.initTheme = initTheme;
 
-document.addEventListener('DOMContentLoaded', () => {
-    initTheme();
-
-    const themeBtn = document.getElementById('themeToggle');
-    if (themeBtn) {
-        themeBtn.onclick = toggleTheme;
-    }
-});
-
-// Sample Pill Selector
+// Quick Test Sample Pill Selector
 function setSample(url) {
     const input = document.getElementById('urlInput');
+    const form = document.getElementById('scanForm');
     if (input) {
         input.value = url;
         toggleClearBtn();
-        input.focus();
+        if (form) {
+            const btnText = document.querySelector('#submitBtn .btn-text');
+            const btnSpinner = document.querySelector('#submitBtn .btn-spinner');
+            if (btnText && btnSpinner) {
+                btnText.textContent = 'Scanning...';
+                btnSpinner.classList.remove('hidden');
+            }
+            form.submit();
+        }
     }
 }
 
-// Clear Input Logic
-const urlInput = document.getElementById('urlInput');
-const clearBtn = document.getElementById('clearBtn');
+window.setSample = setSample;
 
+// Clear Input Logic
 function toggleClearBtn() {
+    const urlInput = document.getElementById('urlInput');
+    const clearBtn = document.getElementById('clearBtn');
     if (urlInput && clearBtn) {
         clearBtn.style.display = urlInput.value.length > 0 ? 'block' : 'none';
     }
 }
 
-if (urlInput) {
-    urlInput.addEventListener('input', toggleClearBtn);
-    toggleClearBtn();
-}
-
 function clearInput() {
+    const urlInput = document.getElementById('urlInput');
     if (urlInput) {
         urlInput.value = '';
         toggleClearBtn();
@@ -65,33 +63,55 @@ function clearInput() {
     }
 }
 
-// Form Loading State
-const scanForm = document.getElementById('scanForm');
-const submitBtn = document.getElementById('submitBtn');
+window.clearInput = clearInput;
 
-if (scanForm && submitBtn) {
-    scanForm.addEventListener('submit', () => {
-        const btnText = submitBtn.querySelector('.btn-text');
-        const btnSpinner = submitBtn.querySelector('.btn-spinner');
-        if (btnText && btnSpinner) {
-            btnText.textContent = 'Scanning...';
-            btnSpinner.classList.remove('hidden');
-            submitBtn.style.opacity = '0.85';
-        }
+// Initialize on DOM Ready
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+
+    // Bind Theme Toggle buttons
+    document.querySelectorAll('.theme-toggle-btn, #themeToggle').forEach(btn => {
+        btn.onclick = toggleTheme;
     });
-// Smooth Scroll for Navigation Anchor Links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const targetId = this.getAttribute('href');
-        if (targetId && targetId !== '#') {
-            const targetElem = document.querySelector(targetId);
-            if (targetElem) {
-                e.preventDefault();
-                targetElem.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
+
+    const urlInput = document.getElementById('urlInput');
+    if (urlInput) {
+        urlInput.addEventListener('input', toggleClearBtn);
+        toggleClearBtn();
+    }
+
+    const scanForm = document.getElementById('scanForm');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (scanForm && submitBtn) {
+        scanForm.addEventListener('submit', () => {
+            const btnText = submitBtn.querySelector('.btn-text');
+            const btnSpinner = submitBtn.querySelector('.btn-spinner');
+            if (btnText && btnSpinner) {
+                btnText.textContent = 'Scanning...';
+                btnSpinner.classList.remove('hidden');
+                submitBtn.style.opacity = '0.85';
             }
-        }
+        });
+    }
+
+    // Smooth Scroll for Navigation Anchor Links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId !== '#') {
+                const targetElem = document.querySelector(targetId);
+                if (targetElem) {
+                    e.preventDefault();
+                    targetElem.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            }
+        });
     });
 });
+
+// Immediate execution to set theme attribute right away
+initTheme();
