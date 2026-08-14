@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="PhishGuard AI - AI Phishing URL Detector landing page. Real-time machine learning, TF-IDF NLP, and security heuristics analysis for web links.">
+    <title>PhishGuard AI | AI Phishing URL Detector</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+    <!-- Background Orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+
+    <div class="app-layout landing-layout">
+
+        <!-- Sticky Navigation Bar -->
+        <header class="top-nav sticky-nav">
+            <div class="nav-brand">
+                <span class="shield-icon">🛡️</span>
+                <span class="brand-text">PhishGuard <span class="badge-ai">AI 2.0</span></span>
+            </div>
+
+            <nav class="nav-links">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#technology" class="nav-link">Technology</a>
+                <a href="#about" class="nav-link">About Me</a>
+                <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="nav-link">GitHub</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button type="button" class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Mode">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <a href="{{ url_for('scan') }}" class="nav-cta-btn">Scan URL →</a>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section id="hero" class="hero-container">
+            <div class="hero-left">
+                <div class="hero-badge-pill">
+                    <span class="badge-dot"></span> Real-Time AI Security Engine
+                </div>
+                <h1 class="landing-hero-title">Detect Phishing Before It’s Too Late.</h1>
+                <p class="landing-hero-subtitle">
+                    PhishGuard AI analyzes URLs using Machine Learning, TF-IDF NLP, URL structural analysis, and security heuristics to identify suspicious links in seconds.
+                </p>
+                <div class="hero-cta-group">
+                    <a href="{{ url_for('scan') }}" class="btn-primary-hero">Scan a URL →</a>
+                    <a href="#how-it-works" class="btn-secondary-hero">Explore How It Works</a>
+                </div>
+                <div class="hero-highlights">
+                    <div class="highlight-item"><span class="highlight-icon">🛡️</span> AI-Powered Detection</div>
+                    <div class="highlight-item"><span class="highlight-icon">⚡</span> Real-Time Analysis</div>
+                    <div class="highlight-item"><span class="highlight-icon">🔍</span> Explainable Results</div>
+                </div>
+            </div>
+
+            <div class="hero-right">
+                <!-- Polished Dashboard Preview Card -->
+                <div class="preview-card-wrapper">
+                    <div class="preview-card-header">
+                        <span class="preview-dot red"></span>
+                        <span class="preview-dot yellow"></span>
+                        <span class="preview-dot green"></span>
+                        <span class="preview-title-text">PhishGuard Security Scanner</span>
+                    </div>
+                    <div class="preview-card-body">
+                        <div class="preview-status-badge">
+                            <span class="preview-status-icon">⚠️</span>
+                            <div>
+                                <h3 class="preview-status-heading">PHISHING / SUSPICIOUS</h3>
+                                <span class="preview-status-sub">High Risk Link Detected</span>
+                            </div>
+                        </div>
+
+                        <div class="preview-risk-bar">
+                            <div class="preview-risk-label">
+                                <span>Threat Risk Index</span>
+                                <span class="preview-risk-val">97% (Critical Risk)</span>
+                            </div>
+                            <div class="preview-bar-bg">
+                                <div class="preview-bar-fill"></div>
+                            </div>
+                        </div>
+
+                        <div class="preview-features-grid">
+                            <div class="preview-feat-card">
+                                <span class="pfeat-name">URL Length</span>
+                                <span class="pfeat-val">46 chars</span>
+                            </div>
+                            <div class="preview-feat-card">
+                                <span class="pfeat-name">Domain Length</span>
+                                <span class="pfeat-val">31 chars</span>
+                            </div>
+                            <div class="preview-feat-card">
+                                <span class="pfeat-name">Suspicious Keywords</span>
+                                <span class="pfeat-val">4 matched</span>
+                            </div>
+                            <div class="preview-feat-card">
+                                <span class="pfeat-name">Shannon Entropy</span>
+                                <span class="pfeat-val">4.191</span>
+                            </div>
+                            <div class="preview-feat-card">
+                                <span class="pfeat-name">IP Address</span>
+                                <span class="pfeat-val">No ✓</span>
+                            </div>
+                            <div class="preview-feat-card">
+                                <span class="pfeat-name">Hyphen Count</span>
+                                <span class="pfeat-val">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Statistics -->
+        <section class="stats-section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3 class="stat-number">650K+</h3>
+                    <p class="stat-label">Training URLs</p>
+                    <span class="stat-sub">Benchmarked dataset corpus</span>
+                </div>
+                <div class="stat-card">
+                    <h3 class="stat-number">96%+</h3>
+                    <p class="stat-label">Model Accuracy</p>
+                    <span class="stat-sub">Linear SVM + TF-IDF cross-validated</span>
+                </div>
+                <div class="stat-card">
+                    <h3 class="stat-number">8+</h3>
+                    <p class="stat-label">URL Features</p>
+                    <span class="stat-sub">Lexical & structural threat metrics</span>
+                </div>
+                <div class="stat-card">
+                    <h3 class="stat-number">Real-Time</h3>
+                    <p class="stat-label">URL Analysis</p>
+                    <span class="stat-sub">Instant threat evaluation engine</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section-container">
+            <div class="section-header">
+                <span class="section-pill">CORE CAPABILITIES</span>
+                <h2 class="section-title">Intelligent URL Security Analysis</h2>
+                <p class="section-subtitle">Multi-layered security engine combining supervised machine learning, natural language processing, and structural heuristics.</p>
+            </div>
+
+            <div class="features-grid-6">
+                <div class="feature-box">
+                    <div class="fbox-icon">🧠</div>
+                    <h3>Machine Learning Detection</h3>
+                    <p>Supervised Linear SVM classifier analyzes intricate URL patterns learned from large training datasets.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="fbox-icon">🔤</div>
+                    <h3>TF-IDF NLP</h3>
+                    <p>Converts URL character n-grams and text substrings into high-dimensional numerical feature vectors.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="fbox-icon">📐</div>
+                    <h3>Structural Analysis</h3>
+                    <p>Calculates URL length, domain length, dot counts, subdomain depth, slash frequency, hyphens, and Shannon entropy.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="fbox-icon">🛡️</div>
+                    <h3>Threat Heuristics</h3>
+                    <p>Scans for brand spoofing, abused TLD extensions (.top, .online, .cfd), serverless subdomains, and DGA patterns.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="fbox-icon">📊</div>
+                    <h3>Dynamic Risk Score</h3>
+                    <p>Computes a continuous 0–100 threat percentage mapped into 5 intuitive color-coded security risk tiers.</p>
+                </div>
+                <div class="feature-box">
+                    <div class="fbox-icon">💡</div>
+                    <h3>Explainable Detection</h3>
+                    <p>Provides clear, interpretable bullet-point evidence explaining exactly why a link received its risk score.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works" class="section-container">
+            <div class="section-header">
+                <span class="section-pill">PROCESS PIPELINE</span>
+                <h2 class="section-title">How It Works</h2>
+                <p class="section-subtitle">End-to-end security inspection pipeline executing in milliseconds.</p>
+            </div>
+
+            <div class="steps-pipeline">
+                <div class="step-card">
+                    <div class="step-num">01</div>
+                    <h4>Enter URL</h4>
+                    <p>User inputs a target link or defanged URL string.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-num">02</div>
+                    <h4>Extract Features</h4>
+                    <p>System extracts lexical and structural threat metrics.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-num">03</div>
+                    <h4>TF-IDF Processing</h4>
+                    <p>URL text is converted into numerical representations.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-num">04</div>
+                    <h4>AI + Security Analysis</h4>
+                    <p>Linear SVM and heuristic rules analyze the URL.</p>
+                </div>
+                <div class="step-arrow">→</div>
+                <div class="step-card">
+                    <div class="step-num">05</div>
+                    <h4>Risk Report</h4>
+                    <p>Displays SAFE/PHISHING, risk %, level, features & reasons.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Level Visualization -->
+        <section class="section-container">
+            <div class="section-header">
+                <span class="section-pill">RISK CATEGORIZATION</span>
+                <h2 class="section-title">Threat Risk Scale</h2>
+                <p class="section-subtitle">Five granular security assessment levels mapped by our dynamic risk calculation engine.</p>
+            </div>
+
+            <div class="risk-scale-grid">
+                <div class="rscale-card card-minimal">
+                    <span class="rscale-dot green"></span>
+                    <span class="rscale-range">0 – 15</span>
+                    <h4>Minimal Risk</h4>
+                    <p>Verified institutional domains or clean structural links.</p>
+                </div>
+                <div class="rscale-card card-low">
+                    <span class="rscale-dot blue"></span>
+                    <span class="rscale-range">16 – 35</span>
+                    <h4>Low Risk</h4>
+                    <p>Standard clean web domains with no threat markers.</p>
+                </div>
+                <div class="rscale-card card-moderate">
+                    <span class="rscale-dot yellow"></span>
+                    <span class="rscale-range">36 – 60</span>
+                    <h4>Moderate Risk</h4>
+                    <p>Minor structural anomalies or ambiguous lexical signals.</p>
+                </div>
+                <div class="rscale-card card-high">
+                    <span class="rscale-dot orange"></span>
+                    <span class="rscale-range">61 – 84</span>
+                    <h4>High Risk</h4>
+                    <p>Abused TLDs, hyphenated brand lures, or ML threat flags.</p>
+                </div>
+                <div class="rscale-card card-critical">
+                    <span class="rscale-dot red"></span>
+                    <span class="rscale-range">85 – 100</span>
+                    <h4>Critical Risk</h4>
+                    <p>Severe phishing indicators, raw IP hosts, or DGA scams.</p>
+                </div>
+            </div>
+
+            <p class="disclaimer-note">
+                ℹ️ <strong>Disclaimer:</strong> Risk score is an AI/heuristic estimate and does not guarantee that a website is malicious or safe.
+            </p>
+        </section>
+
+        <!-- Technology Stack -->
+        <section id="technology" class="section-container">
+            <div class="section-header">
+                <span class="section-pill">TECHNICAL ARCHITECTURE</span>
+                <h2 class="section-title">Built With Modern Machine Learning</h2>
+                <p class="section-subtitle">Core technologies powering PhishGuard AI's detection model.</p>
+            </div>
+
+            <div class="tech-pills-wrap">
+                <span class="tech-pill">Python</span>
+                <span class="tech-pill">Flask</span>
+                <span class="tech-pill">Scikit-learn</span>
+                <span class="tech-pill">Linear SVM</span>
+                <span class="tech-pill">TF-IDF</span>
+                <span class="tech-pill">Pandas</span>
+                <span class="tech-pill">NumPy</span>
+                <span class="tech-pill">HTML5</span>
+                <span class="tech-pill">CSS3</span>
+                <span class="tech-pill">JavaScript ES6</span>
+            </div>
+
+            <div class="architecture-box">
+                <h4 class="arch-title">Data Processing Flow</h4>
+                <div class="arch-flow">
+                    <span class="aflow-node">URL Input</span> →
+                    <span class="aflow-node">Feature Extraction</span> →
+                    <span class="aflow-node">TF-IDF Vectorization</span> →
+                    <span class="aflow-node">Linear SVM</span> →
+                    <span class="aflow-node">Heuristic Analysis</span> →
+                    <span class="aflow-node">Dynamic Risk Engine</span> →
+                    <span class="aflow-node highlight">Security Report</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Explainability Section -->
+        <section class="section-container">
+            <div class="explain-card-wrapper">
+                <div class="explain-left">
+                    <span class="section-pill">EXPLAINABLE AI (XAI)</span>
+                    <h2 class="explain-heading">Don’t Just Get a Verdict. Understand It.</h2>
+                    <p class="explain-desc">
+                        PhishGuard AI provides interpretable URL-level indicators so users can understand the factors contributing to a prediction instead of receiving only a black-box result.
+                    </p>
+                </div>
+                <div class="explain-right">
+                    <div class="sample-result-box">
+                        <div class="sresult-badge">
+                            <span>☠️ 97% — Critical Risk</span>
+                        </div>
+                        <div class="sresult-items">
+                            <div class="sitem">🔑 <strong>2 suspicious keywords</strong> matched</div>
+                            <div class="sitem">⚡ <strong>1 hyphenated domain structure</strong> detected</div>
+                            <div class="sitem">🧬 <strong>High Shannon entropy</strong> (random text)</div>
+                            <div class="sitem">🤖 <strong>Strong ML confidence</strong> signal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Me / Developer Section -->
+        <section id="about" class="section-container">
+            <div class="section-header">
+                <span class="section-pill">DEVELOPER PORTFOLIO</span>
+                <h2 class="section-title">Built by a Developer Interested in AI & Cybersecurity</h2>
+            </div>
+
+            <div class="developer-card">
+                <div class="dev-header">
+                    <div class="dev-avatar">👨‍💻</div>
+                    <div>
+                        <h3 class="dev-name">Ningappa Hirekudi</h3>
+                        <p class="dev-role">Computer Science & Engineering | AI & Cybersecurity Enthusiast</p>
+                    </div>
+                </div>
+                <p class="dev-bio">
+                    "I built PhishGuard AI to explore how Machine Learning and cybersecurity techniques can be combined to detect suspicious URLs and provide explainable security insights."
+                </p>
+
+                <div class="contact-cards-grid">
+                    <a href="#" class="contact-card" target="_blank">
+                        <span class="contact-icon">🔗</span>
+                        <div class="contact-info">
+                            <span class="contact-platform">LinkedIn</span>
+                            <span class="contact-text">Connect with me</span>
+                        </div>
+                    </a>
+                    <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" class="contact-card" target="_blank">
+                        <span class="contact-icon">💻</span>
+                        <div class="contact-info">
+                            <span class="contact-platform">GitHub</span>
+                            <span class="contact-text">View my projects</span>
+                        </div>
+                    </a>
+                    <a href="mailto:example@domain.com" class="contact-card">
+                        <span class="contact-icon">✉️</span>
+                        <div class="contact-info">
+                            <span class="contact-platform">Email</span>
+                            <span class="contact-text">Contact me</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact CTA Section -->
+        <section class="cta-section">
+            <h2>Want to Know More About the Project?</h2>
+            <p>Explore the source code, connect with me, or try the PhishGuard AI scanner.</p>
+            <div class="cta-btn-group">
+                <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="btn-cta-link">GitHub →</a>
+                <a href="#" target="_blank" class="btn-cta-link">LinkedIn →</a>
+                <a href="{{ url_for('scan') }}" class="btn-cta-primary">Scan a URL →</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer-landing">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <span class="shield-icon">🛡️</span>
+                    <span class="brand-text">PhishGuard AI</span>
+                    <p class="footer-sub">AI-powered phishing URL detection and security analysis.</p>
+                </div>
+
+                <div class="footer-links-group">
+                    <a href="#hero">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
+                    <a href="#technology">Technology</a>
+                    <a href="#about">About Me</a>
+                    <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank">GitHub</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>© 2026 PhishGuard AI — Built with Python, Scikit-learn, TF-IDF & Linear SVM</p>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

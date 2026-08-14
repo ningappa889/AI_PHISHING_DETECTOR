@@ -14,8 +14,13 @@ vectorizer = joblib.load("model/vectorizer.pkl")
 scaler = joblib.load("model/scaler.pkl")
 
 
-@app.route("/", methods=["GET", "POST"])
-def home():
+@app.route("/")
+def landing():
+    return render_template("landing.html")
+
+
+@app.route("/scan", methods=["GET", "POST"])
+def scan():
 
     prediction = None
     url = ""
