@@ -35,13 +35,43 @@ def clean_url(url):
     return u
 
 
+# Reserved institutional & government suffixes that CANNOT be registered by unauthorized individuals
+TRUSTED_TLD_SUFFIXES = (
+    ".gov", ".gov.in", ".gov.uk", ".gov.au", ".gov.ca",
+    ".nic.in", ".edu", ".edu.in", ".ac.in", ".mil", ".res.in", ".org.in"
+)
+
+# Known 2-part TLD suffixes to properly extract registered domains (e.g. sbi.co.in -> sbi.co.in, not co.in)
+TWO_PART_TLDS = {
+    "co.in", "gov.in", "net.in", "org.in", "edu.in", "ac.in", "nic.in", "res.in",
+    "co.uk", "gov.uk", "org.uk", "ac.uk",
+    "com.au", "gov.au", "edu.au", "org.au",
+    "co.jp", "ne.jp", "ac.jp"
+}
+
 TRUSTED_DOMAINS = {
-    "google.com", "google.co.in", "google.co.uk",
-    "amazon.com", "github.com", "microsoft.com",
-    "apple.com", "paypal.com", "openai.com", "facebook.com",
-    "twitter.com", "linkedin.com", "youtube.com", "instagram.com",
-    "wikipedia.org", "yahoo.com", "netflix.com", "claude.ai",
-    "anthropic.com", "perplexity.ai", "reddit.com", "x.com"
+    # Indian Banking, Digital Payments & Financial Services
+    "phonepe.com", "paytm.com", "bhimupi.org.in", "npci.org.in", "gpay.com",
+    "sbi.co.in", "onlinesbi.sbi", "sbi.sbi", "hdfcbank.com", "icicibank.com",
+    "axisbank.com", "kotak.com", "pnbindia.in", "bankofbaroda.in", "canarabank.com",
+    "cred.club", "razorpay.com", "zerodha.com", "groww.in", "upstox.com", "paytm.in",
+
+    # Indian Official Portals & E-Commerce / Services
+    "uidai.gov.in", "irctc.co.in", "flipkart.com", "myntra.com", "meesho.com",
+    "swiggy.com", "zomato.com", "zepto.com", "blinkit.com", "bigbasket.com",
+    "bookmyshow.com", "makemytrip.com", "redbus.in", "licindia.in", "epfindia.gov.in",
+    "incometax.gov.in", "passportindia.gov.in", "parivahan.gov.in", "digilocker.gov.in",
+    "airtel.in", "jio.com", "tataplay.com", "hotstar.com",
+
+    # Global Tech, Social, Search & AI Platforms
+    "google.com", "google.co.in", "google.co.uk", "youtube.com", "gmail.com",
+    "amazon.com", "amazon.in", "apple.com", "microsoft.com", "github.com", "gitlab.com",
+    "openai.com", "chatgpt.com", "claude.ai", "anthropic.com", "perplexity.ai",
+    "facebook.com", "instagram.com", "whatsapp.com", "twitter.com", "x.com",
+    "linkedin.com", "reddit.com", "netflix.com", "spotify.com", "wikipedia.org",
+    "geeksforgeeks.org", "stackoverflow.com", "medium.com", "coursera.org",
+    "udemy.com", "quora.com", "canva.com", "figma.com", "adobe.com", "zoom.us",
+    "notion.so", "paypal.com", "yahoo.com"
 }
 
 
@@ -51,11 +81,23 @@ def is_trusted_domain(url):
         netloc = urlparse("http://" + cleaned).netloc
     except Exception:
         netloc = cleaned.split("/")[0].split(":")[0]
-    parts = netloc.lower().split(".")
-    if len(parts) >= 2:
+
+    netloc_lower = netloc.lower()
+
+    # 1. Government and official education TLDs are inherently trusted
+    if netloc_lower.endswith(TRUSTED_TLD_SUFFIXES):
+        return True
+
+    parts = netloc_lower.split(".")
+
+    # 2. Handle 2-part TLDs (like sbi.co.in -> sbi.co.in)
+    if len(parts) >= 3 and ".".join(parts[-2:]) in TWO_PART_TLDS:
+        reg_domain = ".".join(parts[-3:])
+    elif len(parts) >= 2:
         reg_domain = ".".join(parts[-2:])
     else:
-        reg_domain = netloc.lower()
+        reg_domain = netloc_lower
+
     return reg_domain in TRUSTED_DOMAINS
 
 

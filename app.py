@@ -66,7 +66,21 @@ def home():
                 else:
                     risk_score = 85 if result == 1 else 15
 
-                if result == 0:
+                # Clean Domain Guardrail: If a domain has 0 suspicious keywords, 0 hyphens,
+                # 0 IP host, <=1 subdomain, and short domain length, it lacks structural threat indicators.
+                is_structurally_clean = (
+                    features.get("suspicious_keywords", 0) == 0 and
+                    features.get("hyphen_count", 0) == 0 and
+                    features.get("contains_ip", 0) == 0 and
+                    features.get("subdomain_count", 0) <= 1 and
+                    features.get("domain_length", 0) <= 30
+                )
+
+                if is_structurally_clean:
+                    prediction = "SAFE"
+                    risk_level = "Low Risk"
+                    risk_score = min(risk_score, 20)
+                elif result == 0:
                     prediction = "SAFE"
                     risk_level = "Low Risk"
                     risk_score = min(risk_score, 45)
