@@ -142,8 +142,10 @@ def has_suspicious_domain_pattern(url):
         if feats["suspicious_keywords"] >= 2:
             return True
 
-    # 4. Check for hyphenated domain names on non-trusted TLDs
-    if feats["hyphen_count"] >= 1 and (feats["domain_length"] >= 12 or feats["suspicious_keywords"] >= 1):
+    # 4. Check for multiple hyphens or hyphens paired with suspicious keywords
+    if feats["hyphen_count"] >= 2:
+        return True
+    if feats["hyphen_count"] >= 1 and feats["suspicious_keywords"] >= 1:
         return True
 
     # 5. Check for suspicious path patterns (/v/index.html, /goldclie/new, /gRB0qs)
@@ -172,11 +174,14 @@ def extract_features(url):
         "login", "secure", "verify", "update", "account", "signin", "bank",
         "paypal", "free", "bonus", "benefits", "access", "claim", "portal",
         "support", "service", "billing", "help", "info", "confirm", "admin",
-        "security", "wallet", "remote", "domain", "sav", "save", "prune",
+        "security", "wallet", "remote", "domain", "prune",
         "client", "gold", "clie", "direct", "express", "token", "auth",
         "connect", "mail", "banking", "office", "webmail", "genthis", "eplus",
         "fwc", "fifa", "ticket", "cup", "lottery", "promo", "event", "deal"
     ]
+
+    tokens = [t for t in re.split(r"[.\-_/\d]+", cleaned.lower()) if t]
+    suspicious_count = sum(1 for kw in keywords if any(t == kw or (len(t) > len(kw) and t.startswith(kw) and kw in ["login", "bank", "pay", "verify", "admin", "secure"]) for t in tokens))
 
     return {
         "url_length": len(cleaned),
@@ -188,6 +193,6 @@ def extract_features(url):
         "contains_at": 1 if "@" in cleaned else 0,
         "contains_ip": 1 if re.search(r"\d+\.\d+\.\d+\.\d+", netloc) else 0,
         "subdomain_count": max(len(netloc.split(".")) - 2, 0),
-        "suspicious_keywords": sum(word in cleaned.lower() for word in keywords),
+        "suspicious_keywords": suspicious_count,
         "entropy": entropy(cleaned)
     }
