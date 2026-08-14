@@ -98,6 +98,12 @@
                     {% endif %}
                 </div>
 
+                <!-- Prominent Scanned Target URL Box -->
+                <div class="scanned-url-box">
+                    <span class="url-label">Scanned Target:</span>
+                    <span class="url-text-large">{{ url }}</span>
+                </div>
+
                 <!-- Risk Score Bar -->
                 <div class="risk-meter-wrapper">
                     <div class="risk-label-row">
@@ -117,15 +123,26 @@
                     </div>
                 </div>
 
-                <div class="scanned-url-box">
-                    <span class="url-label">Scanned Target:</span>
-                    <code class="url-text">{{ url }}</code>
+                <!-- "Why is this risky?" Summary Note (if risky) -->
+                {% if prediction == "PHISHING" or risk_score > 35 %}
+                <div class="risky-summary-card">
+                    <div class="summary-header">
+                        <span class="summary-icon">⚠️</span>
+                        <h4 class="summary-title">Why is this risky?</h4>
+                    </div>
+                    <p class="summary-text">
+                        Analyzed <strong>{{ risk_score }}% {{ risk_level }}</strong> due to
+                        {% if features and features.suspicious_keywords > 0 %}<strong>{{ features.suspicious_keywords }} phishing bait keyword(s)</strong>, {% endif %}
+                        {% if features and features.hyphen_count > 0 %}<strong>{{ features.hyphen_count }} hyphenated domain structure(s)</strong>, {% endif %}
+                        an entropy density score of <strong>{{ features.entropy }}</strong>, and TF-IDF machine learning risk signals.
+                    </p>
                 </div>
+                {% endif %}
 
                 <!-- AI Security Analysis & Decision Breakdown -->
                 {% if reasons %}
                 <div class="analysis-section">
-                    <h3>💡 AI Security Reasoning & Decision Breakdown</h3>
+                    <h3>💡 AI Security Reasoning Breakdown</h3>
                     <div class="reasons-grid">
                         {% for item in reasons %}
                         <div class="reason-card">
