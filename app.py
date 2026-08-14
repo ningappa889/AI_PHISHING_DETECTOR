@@ -29,6 +29,9 @@ def home():
         url = request.form.get("url", "").strip()
 
         if url:
+            if not url.startswith(("http://", "https://")):
+                url = "https://" + url
+
             print("Scanning URL:", repr(url))
 
             # Build feature table for UI rendering
