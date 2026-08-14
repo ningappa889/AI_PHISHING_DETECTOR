@@ -58,14 +58,13 @@ const scanForm = document.getElementById('scanForm');
 const submitBtn = document.getElementById('submitBtn');
 
 if (scanForm && submitBtn) {
-    scanForm.addEventListener('submit', (e) => {
+    scanForm.addEventListener('submit', () => {
         const btnText = submitBtn.querySelector('.btn-text');
         const btnSpinner = submitBtn.querySelector('.btn-spinner');
         if (btnText && btnSpinner) {
             btnText.textContent = 'Scanning...';
             btnSpinner.classList.remove('hidden');
             submitBtn.style.opacity = '0.85';
-            submitBtn.style.pointerEvents = 'none';
         }
     });
 }

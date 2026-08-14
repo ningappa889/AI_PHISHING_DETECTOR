@@ -50,12 +50,10 @@ body {
     color: var(--text-primary);
     font-family: var(--font-body);
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    display: block;
     position: relative;
     overflow-x: hidden;
-    padding: clamp(15px, 3vw, 40px);
+    padding: 30px 15px 60px 15px;
 }
 
 /* Background Animated Gradient Orbs */
@@ -251,7 +249,7 @@ body {
     background: rgba(0, 0, 0, 0.15);
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 1rem;
+    font-size: 16px !important; /* Prevents mobile browser auto-zoom */
     outline: none;
 }
 
