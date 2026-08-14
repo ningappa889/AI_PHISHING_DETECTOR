@@ -629,19 +629,23 @@ body {
     width: min(96vw, 1140px);
     max-width: 1140px;
     gap: 50px;
+    padding-top: 80px;
 }
 
 .sticky-nav {
-    position: sticky;
+    position: fixed;
     top: 15px;
-    z-index: 100;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(94vw, 1140px);
+    z-index: 1000;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 18px;
     padding: 12px 24px;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
 }
 
 .nav-links {
@@ -1187,12 +1191,17 @@ body {
     font-weight: 600;
     padding: 8px 18px;
     border-radius: 20px;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
 }
 
 .tech-pill:hover {
     border-color: var(--accent-blue);
-    transform: translateY(-2px);
+    color: var(--accent-blue);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(56, 189, 248, 0.25);
 }
 
 .architecture-box {
