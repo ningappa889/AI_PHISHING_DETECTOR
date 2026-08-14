@@ -629,23 +629,24 @@ body {
     width: min(96vw, 1140px);
     max-width: 1140px;
     gap: 50px;
-    padding-top: 80px;
+    padding-top: 90px;
 }
 
 .sticky-nav {
     position: fixed;
-    top: 15px;
+    top: 12px;
     left: 50%;
     transform: translateX(-50%);
     width: min(94vw, 1140px);
-    z-index: 1000;
+    max-width: 1140px;
+    z-index: 9999;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: 18px;
     padding: 12px 24px;
-    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
 }
 
 .nav-links {

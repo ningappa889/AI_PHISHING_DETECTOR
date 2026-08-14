@@ -20,31 +20,31 @@
     <div class="bg-orb orb-1"></div>
     <div class="bg-orb orb-2"></div>
 
+    <!-- Fixed Navigation Bar -->
+    <header class="top-nav sticky-nav">
+        <div class="nav-brand">
+            <span class="shield-icon">🛡️</span>
+            <span class="brand-text">PhishGuard <span class="badge-ai">AI 2.0</span></span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="#hero" class="nav-link active">Home</a>
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How It Works</a>
+            <a href="#technology" class="nav-link">Technology</a>
+            <a href="#about" class="nav-link">About Me</a>
+            <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="nav-link">GitHub</a>
+        </nav>
+
+        <div class="nav-actions">
+            <button type="button" class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Mode">
+                <span class="theme-icon">🌙</span>
+            </button>
+            <a href="{{ url_for('scan') }}" class="nav-cta-btn">Scan URL →</a>
+        </div>
+    </header>
+
     <div class="app-layout landing-layout">
-
-        <!-- Sticky Navigation Bar -->
-        <header class="top-nav sticky-nav">
-            <div class="nav-brand">
-                <span class="shield-icon">🛡️</span>
-                <span class="brand-text">PhishGuard <span class="badge-ai">AI 2.0</span></span>
-            </div>
-
-            <nav class="nav-links">
-                <a href="#hero" class="nav-link active">Home</a>
-                <a href="#features" class="nav-link">Features</a>
-                <a href="#how-it-works" class="nav-link">How It Works</a>
-                <a href="#technology" class="nav-link">Technology</a>
-                <a href="#about" class="nav-link">About Me</a>
-                <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="nav-link">GitHub</a>
-            </nav>
-
-            <div class="nav-actions">
-                <button type="button" class="theme-toggle-btn" id="themeToggle" title="Toggle Light/Dark Mode">
-                    <span class="theme-icon">🌙</span>
-                </button>
-                <a href="{{ url_for('scan') }}" class="nav-cta-btn">Scan URL →</a>
-            </div>
-        </header>
 
         <!-- Hero Section -->
         <section id="hero" class="hero-container">
@@ -393,7 +393,6 @@
             <p>Explore the source code, connect with me, or try the PhishGuard AI scanner.</p>
             <div class="cta-btn-group">
                 <a href="https://github.com/ningappa889/AI_PHISHING_DETECTOR" target="_blank" class="btn-cta-link">Project Repository →</a>
-                <a href="https://www.linkedin.com/in/ningappa-hirekudi-892677346" target="_blank" class="btn-cta-link">LinkedIn →</a>
                 <a href="{{ url_for('scan') }}" class="btn-cta-primary">Scan a URL →</a>
             </div>
         </section>
