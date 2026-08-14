@@ -40,7 +40,8 @@ TRUSTED_DOMAINS = {
     "amazon.com", "github.com", "microsoft.com",
     "apple.com", "paypal.com", "openai.com", "facebook.com",
     "twitter.com", "linkedin.com", "youtube.com", "instagram.com",
-    "wikipedia.org", "yahoo.com", "netflix.com"
+    "wikipedia.org", "yahoo.com", "netflix.com", "claude.ai",
+    "anthropic.com", "perplexity.ai", "reddit.com", "x.com"
 }
 
 
