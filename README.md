@@ -12,6 +12,7 @@ PhishGuard AI analyzes URLs in real time using lexical feature extraction, struc
 - 📐 **Structural & Lexical Analysis**: Extracts URL length, domain length, subdomains, slash counts, hyphens, and Shannon entropy.
 - 📊 **Dynamic Risk Index (0–100%)**: Categorizes links into 5 risk levels (Minimal, Low, Moderate, High, Critical).
 - 💡 **Explainable AI (XAI) Reasoning**: Generates interpretable bullet-point evidence explaining why a link received its score.
+- 🌐 **Live Demo**: [urlsecure.vercel.app](https://urlsecure.vercel.app/) (Alternative: [aiphishguard.vercel.app](https://aiphishguard.vercel.app/))
 - 🌐 **Modern Landing Page & Scanner**: Premium cybersecurity landing page at `/` and live URL scanner at `/scan`.
 - ☁️ **Vercel Ready**: Pre-configured serverless setup (`vercel.json`) for zero-downtime deployment.
 

@@ -1,4 +1,5 @@
 {
+  "name": "phishguard",
   "version": 2,
   "builds": [
     {
